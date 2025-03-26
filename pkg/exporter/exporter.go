@@ -481,7 +481,12 @@ func (e *Exporter) getPlayerStats(ch chan<- prometheus.Metric) error {
 					return err
 				}
 
-				if resp.StatusCode == 200 {
+				if resp.StatusCode == 400 {
+					player = Player{
+						ID:   id,
+						Name: id,
+					}
+				} else if resp.StatusCode == 200 {
 					if err := json.NewDecoder(resp.Body).Decode(&player); err != nil {
 						e.logger.Error("Failed to connect decode response", "err", err)
 						return err
